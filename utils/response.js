@@ -15,8 +15,9 @@ const getBadRequestResponse = (erroredMessage) => {
   };
 };
 
-const getServerErrorResponse = (erroredMessage) => {
+const getServerErrorResponse = (erroredMessage, data = {}) => {
   return {
+    data,
     message: erroredMessage,
     status: 500,
     error: true,
