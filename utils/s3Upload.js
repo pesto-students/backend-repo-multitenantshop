@@ -16,7 +16,13 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 // Initialize AWS S3
-const s3 = new S3Client();
+const s3 = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+});
 const BUCKET = process.env.S3_BUCKET_NAME;
 
 // POST images to S3
@@ -116,7 +122,6 @@ const deleteImagesFromS3 = async (imageKeys) => {
   try {
     const command = new DeleteObjectsCommand(deleteParams);
     const data = await s3.send(command);
-    console.log("S3 delete response: ", data);
   } catch (error) {
     console.error("Error deleting images from S3:", error);
     throw new Error("Failed to delete product images from S3");

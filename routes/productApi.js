@@ -26,7 +26,7 @@ router.get("/:storeId/allProducts", async (req, res) => {
 
     const id = ObjectId.isValid(storeId) ? new ObjectId(storeId) : storeId;
     // Find the store by storeId
-    const store = await Store.findOne({ _id: id }).populate("products");
+    const store = await Store.findOne({ storeId: id }).populate("products");
 
     if (!store) {
       return res.status(404).json(getBadRequestResponse("Store not found"));
@@ -153,7 +153,7 @@ router.put(
         colors,
       } = req.body;
       const newImages = req.files || [];
-      
+
       // Find the product to update
       const product = await Product.findById(productId);
       if (!product) {
