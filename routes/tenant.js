@@ -87,7 +87,8 @@ router.post("/login", async (req, res) => {
       .status(500)
       .json(
         getServerErrorResponse(
-          "Could not connect to server. Please try after sometime!"
+          "Could not connect to server. Please try after sometime!",
+          error
         )
       );
   }
