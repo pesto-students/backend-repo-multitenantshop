@@ -1,0 +1,32 @@
+{
+  "name": "backend-repo-multitenantshop",
+  "version": "1.0.0",
+  "description": "Application to handle request related to multi tenant shop",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "shophive",
+    "multi-tenant",
+    "shop",
+    "market"
+  ],
+  "author": "Aniket Sharma",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.637.0",
+    "@aws-sdk/s3-request-presigner": "^3.637.0",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.6.0",
+    "multer": "^1.4.5-lts.1",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
