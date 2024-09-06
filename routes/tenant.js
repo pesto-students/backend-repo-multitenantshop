@@ -53,7 +53,6 @@ router.post("/login", async (req, res) => {
   try {
     const tenant = await Tenant.findOne({ username });
 
-    console.log(tenant);
     if (!tenant) {
       return res
         .status(404)
@@ -64,7 +63,7 @@ router.post("/login", async (req, res) => {
         );
     }
 
-    const isMatch = await bcrypt.compare(password, tenant.password);
+    const isMatch = await bcrypt.compare(password, tenant?.password);
     if (!isMatch) {
       return res.status(400).json(getBadRequestResponse("Invalid credentials"));
     }
@@ -79,7 +78,7 @@ router.post("/login", async (req, res) => {
         mail: tenant.mail,
         role: tenant.role,
         store: tenant?.store,
-        storeId: tenant?.store.storeId,
+        storeId: tenant?.store?.storeId,
       })
     );
   } catch (error) {
