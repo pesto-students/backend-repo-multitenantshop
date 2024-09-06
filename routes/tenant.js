@@ -83,14 +83,10 @@ router.post("/login", async (req, res) => {
       })
     );
   } catch (error) {
-    res
-      .status(500)
-      .json(
-        getServerErrorResponse(
-          "Could not connect to server. Please try after sometime!",
-          error
-        )
-      );
+    res.status(500).json({
+      message: "Could not connect to server. Please try after sometime!",
+      error,
+    });
   }
 });
 
