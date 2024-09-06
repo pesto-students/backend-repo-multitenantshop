@@ -12,11 +12,16 @@ app.use(express.json());
 
 app.use(cors());
 
-// MongoDB connection
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log("MONGO DB CONNECTION SUCCESSFUL");
+  } catch (err) {
+    console.log("MONGO DB CONNECTION FAILED: ", err);
+  }
+};
+
+connectDB();
 
 // Import Routes
 const tenantRoutes = require("./routes/tenant");
