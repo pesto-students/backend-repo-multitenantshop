@@ -52,6 +52,8 @@ router.post("/login", async (req, res) => {
   console.log(username, password);
   try {
     const tenant = await Tenant.findOne({ username });
+
+    console.log(tenant);
     if (!tenant) {
       return res
         .status(404)
