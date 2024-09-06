@@ -152,21 +152,13 @@ router.put(
         sizeOptions,
         colors,
       } = req.body;
-      const newImages = req.files || []; // Assuming you use multer for image upload
-
-      console.log(newImages);
-
+      const newImages = req.files || [];
+      
       // Find the product to update
       const product = await Product.findById(productId);
       if (!product) {
         return res.status(404).json({ error: "Product not found" });
       }
-      // if (req.files.length) {
-      //   const imageUploads = await Promise.all(
-      //     req.files.map((file) => uploadToS3(file, "product-images"))
-      //   );
-      //   productData.images = imageUploads.map((upload) => upload.Location);
-      // }
 
       if (newImages && newImages.length > 0) {
         const imageUploads = await Promise.all(
@@ -174,8 +166,6 @@ router.put(
             uploadStoreProductsToS3(file, storeId, productId)
           )
         );
-        console.log("IDS", storeId, productId);
-        console.log("IMAGE UPLOADS", imageUploads);
         product.images = imageUploads.map((upload) => upload.key);
       }
 
