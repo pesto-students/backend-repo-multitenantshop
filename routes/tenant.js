@@ -78,7 +78,7 @@ router.post("/login", async (req, res) => {
         mail: tenant.mail,
         role: tenant.role,
         store: tenant?.store,
-        storeId: tenant?.store?.storeId,
+        storeId: tenant?.storeId,
       })
     );
   } catch (error) {

@@ -5,6 +5,7 @@ const tenantSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   mail: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  storeId: { type: String },
   role: { type: String },
   store: { type: mongoose.Schema.Types.ObjectId, ref: "Store", unique: true },
 });

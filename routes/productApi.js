@@ -11,6 +11,7 @@ const Tenant = require("../models/Tenant");
 const {
   getBadRequestResponse,
   getSuccessResponse,
+  getServerErrorResponse,
 } = require("../utils/response");
 const mongoose = require("mongoose");
 
@@ -49,7 +50,7 @@ router.get("/:storeId/allProducts", async (req, res) => {
     );
     res.json(getSuccessResponse(products));
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json(getServerErrorResponse(error.message));
   }
 });
 
@@ -113,7 +114,7 @@ router.post(
 
       res.status(201).json(getSuccessResponse(newProduct.toObject()));
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json(getServerErrorResponse(error.message));
     }
   }
 );
@@ -154,10 +155,14 @@ router.put(
       } = req.body;
       const newImages = req.files || [];
 
+      const id = ObjectId.isValid(productId)
+        ? new ObjectId(productId)
+        : productId;
+
       // Find the product to update
-      const product = await Product.findById(productId);
+      const product = await Product.findOne({ productId: id });
       if (!product) {
-        return res.status(404).json({ error: "Product not found" });
+        return res.status(404).json(getBadRequestResponse("Product not found"));
       }
 
       if (newImages && newImages.length > 0) {
@@ -166,7 +171,8 @@ router.put(
             uploadStoreProductsToS3(file, storeId, productId)
           )
         );
-        product.images = imageUploads.map((upload) => upload.key);
+        const newImagesKey = imageUploads.map((upload) => upload.key);
+        product.images = [...product.images, ...newImagesKey];
       }
 
       product.name = name || product.name;
@@ -183,7 +189,7 @@ router.put(
 
       res.json(getSuccessResponse(product.toObject()));
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json(getServerErrorResponse(error.message));
     }
   }
 );
@@ -196,15 +202,11 @@ router.delete("/:id", async (req, res) => {
     // Find the product to get the store ID and image URLs
     const product = await Product.findById(productId);
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json(getBadRequestResponse("Product not found"));
     }
 
     // Create an array of image keys to delete from S3
-    const imageKeys = product.images.map((imageUrl) => {
-      // Extract the image key from the URL
-      const key = imageUrl; // Extract the part after the S3 domain
-      return key;
-    });
+    const imageKeys = product.images.map((imageUrl) => imageUrl);
 
     await deleteImagesFromS3(imageKeys);
 
@@ -213,9 +215,9 @@ router.delete("/:id", async (req, res) => {
     await Store.findByIdAndUpdate(product.store, {
       $pull: { products: product._id },
     });
-    res.json({ message: "Product deleted successfully" });
+    res.json(getSuccessResponse(product.toObject()));
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json(getServerErrorResponse(error.message));
   }
 });
 

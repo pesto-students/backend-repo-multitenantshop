@@ -78,6 +78,7 @@ router.post("/:tenantId/store/add", upload.single("file"), async (req, res) => {
     await newStore.save();
 
     tenant.store = newStore;
+    tenant.storeId = storeId;
     await tenant.save();
 
     const { location } = await getPresignedLogoUrl(storeId);
