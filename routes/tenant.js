@@ -49,6 +49,7 @@ router.post("/registerTenant", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
+  console.log(username, password);
   try {
     const tenant = await Tenant.findOne({ username });
     if (!tenant) {
