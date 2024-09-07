@@ -132,7 +132,7 @@ router.get("/:storeId/:productId", async (req, res) => {
     (product.images = presignedProductsUrl || product.images),
       res.json(getSuccessResponse(product.toObject()));
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json(getServerErrorResponse(error.message));
   }
 });
 
